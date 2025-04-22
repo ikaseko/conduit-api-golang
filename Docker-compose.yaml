@@ -1,0 +1,54 @@
+version: '3.8'
+
+services:
+
+  app:
+    container_name: conduit-app
+    build: .
+    ports:
+      - "8080:8080"
+    environment:
+      # Use the service name 'db' as the hostname to connect to PostgreSQL
+      # Adjust user, password, and dbname if you change them in the 'db' service below
+      DB_URL: "postgres://conduit_user:conduit_password@db:5432/conduit_db?sslmode=disable"
+      # --- IMPORTANT ---
+      # Provide your actual 32-byte JWT secret here or via a .env file
+
+      JWT_SECRET: "ReplaceWithYourActual32ByteSecret!"
+    depends_on:
+      db:
+        condition: service_healthy
+    restart: unless-stopped
+    networks:
+      - conduit-net
+
+  # PostgreSQL Database Service
+  db:
+    container_name: conduit-db
+    image: postgres:15-alpine
+    environment:
+      POSTGRES_USER: conduit_user
+      POSTGRES_PASSWORD: conduit_password
+      POSTGRES_DB: conduit_db
+    volumes:
+      - postgres_data:/var/lib/postgresql/data 
+    ports:
+      - "5432:5432"
+    healthcheck:
+
+      test: ["CMD-SHELL", "pg_isready -U conduit_user -d conduit_db"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    restart: unless-stopped
+    networks:
+      - conduit-net
+
+
+volumes:
+  postgres_data:
+
+
+networks:
+  conduit-net:
+    driver: bridge
