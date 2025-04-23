@@ -1,7 +1,6 @@
 # Go RealWorld Conduit Backend
 
-[![Go Report Card](https://goreportcard.com/badge/github.com/YOUR_ACCOUNT/YOUR_REPO)](https://goreportcard.com/report/github.com/YOUR_ACCOUNT/YOUR_REPO) <!-- Update Link! -->
-<!-- Add CI badge if available -->
+
 
 A Go implementation of the [RealWorld](https://github.com/gothinkster/realworld) backend specification (Medium clone).
 
